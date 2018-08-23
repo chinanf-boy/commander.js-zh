@@ -12,7 +12,7 @@
 
 ---
 
-## 校对 🀄️
+## 校对 ✅
 
 <!-- doc-templite START generated -->
 <!-- repo = 'tj/commander.js' -->
@@ -20,10 +20,10 @@
 <!-- time = '2018 8.7' -->
 翻译的原文 | 与日期 | 最新更新 | 更多
 ---|---|---|---
-[commit] | ⏰ 2018 8.17 | ![last] | [中文翻译][translate-list]
+[commit] | ⏰ 2018 8.7 | ![last] | [中文翻译][translate-list]
 
-[last]: https://img.shields.io/github/last-commit/chinanf-boy/debug.svg
-[commit]: https://github.com/chinanf-boy/debug/tree/1.1.1
+[last]: https://img.shields.io/github/last-commit/tj/commander.js.svg
+[commit]: https://github.com/tj/commander.js/tree/e5b27cc553c0c55eb2f8890dc83034d3a3eee531
 
 <!-- doc-templite END generated -->
 
@@ -39,11 +39,33 @@
 
 ### 目录
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-# 指挥官JS
+- [Commander.jS](#commanderjs)
+  - [安装](#%E5%AE%89%E8%A3%85)
+  - [参数解析](#%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90)
+  - [版本选项](#%E7%89%88%E6%9C%AC%E9%80%89%E9%A1%B9)
+  - [特定-命令选项](#%E7%89%B9%E5%AE%9A-%E5%91%BD%E4%BB%A4%E9%80%89%E9%A1%B9)
+  - [强制多态](#%E5%BC%BA%E5%88%B6%E5%A4%9A%E6%80%81)
+  - [正则表达式](#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F)
+  - [可变参数](#%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0)
+  - [指定参数语法](#%E6%8C%87%E5%AE%9A%E5%8F%82%E6%95%B0%E8%AF%AD%E6%B3%95)
+  - [Git风格的子命令](#git%E9%A3%8E%E6%A0%BC%E7%9A%84%E5%AD%90%E5%91%BD%E4%BB%A4)
+    - [`--harmony`](#--harmony)
+  - [自动化帮助信息 --help](#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B8%AE%E5%8A%A9%E4%BF%A1%E6%81%AF---help)
+  - [自定义帮助](#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B8%AE%E5%8A%A9)
+  - [.outputHelp(cb)](#outputhelpcb)
+  - [.help(cb)](#helpcb)
+  - [自定义事件侦听器](#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%E4%BE%A6%E5%90%AC%E5%99%A8)
+  - [实例](#%E5%AE%9E%E4%BE%8B)
+  - [许可证](#%E8%AE%B8%E5%8F%AF%E8%AF%81)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+# Commander.jS
 
 [![Build Status](https://api.travis-ci.org/tj/commander.js.svg?branch=master)](http://travis-ci.org/tj/commander.js)
 [![NPM Version](http://img.shields.io/npm/v/commander.svg?style=flat)](https://www.npmjs.org/package/commander)
@@ -51,16 +73,18 @@
 [![Install Size](https://packagephobia.now.sh/badge?p=commander)](https://packagephobia.now.sh/result?p=commander)
 [![Join the chat at https://gitter.im/tj/commander.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tj/commander.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-完整的解决方案[J.N.](http://nodejs.org)露比的启发下的命令行接口[指挥官](https://github.com/commander-rb/commander).\
-  [API文档](http://tj.github.com/commander.js/)
+  [node.js](http://nodejs.org) 命令行接口的完整解决方案，灵感来自 Ruby 的 [commander](https://github.com/commander-rb/commander)。  
+  [API 文档](http://tj.github.com/commander.js/)
+
+
 
 ## 安装
 
     $ npm install commander --save
 
-## 选项解析
+## 参数解析
 
-带有命令的选项被定义为`.option()`方法,也用作选项的文档. 下面的例子解析ARGS和选项`process.argv`留下剩余的ARG作为`program.args`未被选项消耗的数组. 
+commander 的 `.option()` 方法定义选项，同时也作为 这些选项的说明。下面的例子会解析来自 `process.argv` 的参数和选项，没有匹配任何选项的参数将会放到 `program.args` 数组中. 
 
 ```js
 #!/usr/bin/env node
@@ -86,9 +110,9 @@ if (program.bbqSauce) console.log('  - bbq');
 console.log('  - %s cheese', program.cheese);
 ```
 
-例如,可以将短标志作为单个ARG传递. `-abc`相当于`-a -b -c`. 多字选项,如"模板引擎"是骆驼装箱,成为`program.templateEngine`等. 
+例如, 短标志可以作为单独的参数传递。像 `-abc` 等于 `-a -b -c`。多词组成的选项，像“--template-engine”会变成 `program.templateEngine` 等。
 
-注意,多词选项从`--no`前缀否定下列单词的布尔值. 例如,`--no-sauce`设置值`program.sauce`错了. 
+注意,多词选项以`--no`为前缀会 否定 接下单词的布尔值. 例如,`--no-sauce`设置`program.sauce`是`false`的. 
 
 ```js
 #!/usr/bin/env node
@@ -110,21 +134,21 @@ else console.log(' without sauce');
 
 ## 版本选项
 
-调用`version`隐式添加`-V`和`--version`命令的选项. 当存在这些选项中的任何一个时,命令打印版本号并退出. 
+隐式添加`-V`和`--version`命令的选项来调用`version`. 当存在这些选项中的任何一个时,打印版本号并退出. 
 
     $ ./examples/pizza -V
     0.0.1
 
-如果您希望程序响应`-v`选项而不是`-V`选项,只需将自定义标志传递给`version`方法使用与`option`方法. 
+如果您希望程序响应`-v`选项而不是`-V`选项,只需将自定义`flag`传递给`version`方法.
 
 ```js
 program
   .version('0.0.1', '-v, --version')
 ```
 
-版本标志可以命名为任何东西,但需要长选项. 
+版本`flag`可以是其他命名,但长选项是必须的. 
 
-## 命令特定选项
+## 特定-命令选项
 
 可以将选项附加到命令中. 
 
@@ -143,9 +167,9 @@ program
 program.parse(process.argv)
 ```
 
-使用命令时验证命令的选项. 任何未知选项将被报告为一个错误. 但是,如果基于动作的命令不定义动作,那么选项不被验证. 
+使用对应命令时,验证其命令的选项. 任何未知选项将被报告为一个错误. 但是,如果基于`action`的命令不定义`action`方法,那么选项将不被验证. 
 
-## 强制
+## 强制多态
 
 ```js
 function range(val) {
@@ -201,9 +225,9 @@ console.log(' size: %j', program.size);
 console.log(' drink: %j', program.drink);
 ```
 
-## 变元论证
+## 可变参数
 
-命令的最后一个参数可以是可变的,只有最后一个参数. 为了使论点多样化,你必须追加. `...`参数的名称. 下面是一个例子: 
+ 一个命令的最后一个参数可以是可变参数, 并且只有最后一个参数可变。为了使参数可变，你需要在参数名后面追加 `...`。 下面是个示例：
 
 ```js
 #!/usr/bin/env node
@@ -229,7 +253,7 @@ program
 program.parse(process.argv);
 ```
 
-安`Array`用于变量变量的值. 这适用于`program.args`以及上面提到的传递给您的动作的参数. 
+可变参数的值以 `数组` 的形式保存。如上所示，在传递给你的 action 的参数和 `program.args` 中的值都是如此。
 
 ## 指定参数语法
 
@@ -256,7 +280,7 @@ console.log('command:', cmdValue);
 console.log('environment:', envValue || "no environment given");
 ```
 
-斜角括号 (例如) `<cmd>`指示所需的输入. 方括号 (例如) `[env]`指示可选输入. 
+尖括号（例如 `<cmd>`）代表必填输入，方括号（例如 `[env]`）代表可选输入。
 
 ## Git风格的子命令
 
@@ -272,23 +296,23 @@ program
   .parse(process.argv);
 ```
 
-什么时候?`.command()`用描述参数调用,不`.action(callback)`应该调用子命令来处理,否则会出错. 这告诉指挥官,你将使用单独的可执行文件来执行子命令,非常类似. `git(1)`以及其他受欢迎的工具. \
-指挥官将尝试搜索入口脚本目录中的可执行文件 (如`./examples/pm`) `program-command`,像`pm-install`,`pm-search`.
+当 `.command()` 带有描述参数时，不能采用 `.action(callback)` 来处理子命令，否则会出错。这告诉 commander，你将采用单独的可执行文件作为子命令，就像 `git(1)` 和其他流行的工具一样。
+Commander 将会尝试在入口脚本（例如 `./examples/pm`）的目录中搜索 `program-command` 形式的可执行文件，例如 `pm-install`, `pm-search`。
 
-选项可以通过调用`.command()`. 指定`true`对于`opts.noHelp`将从生成的帮助输出中移除子命令. 指定`true`对于`opts.isDefault`如果没有指定其他子命令,则将运行子命令. 
+你可以在调用 `.command()` 时传递选项。指定 `opts.noHelp` 为 `true` 将从生成的帮助输出中剔除该选项。指定 `opts.isDefault` 为 `true` 将会在没有其它子命令指定的情况下，执行该子命令。
 
-如果程序被设计为全局安装,请确保可执行文件具有适当的模式,例如`755`.
+如果你打算全局安装该命令，请确保可执行文件有对应的权限，例如 `755`。
 
 ### `--harmony`
 
-您可以启用`--harmony`期权有两种方式: 
+您可以采用两种方式启用 `--harmony`：
 
--   使用`#! /usr/bin/env node --harmony`在子命令脚本中. 注意有些OS版本不支持这种模式. 
--   使用`--harmony`调用命令时的选项`node --harmony examples/pm publish`. 这个`--harmony`当生成子命令过程时,将保留选项. 
+* 在子命令脚本中加上 `#!/usr/bin/env node --harmony`。注意一些系统版本不支持此模式。
+* 在指令调用时加上 `--harmony` 参数，例如 `node --harmony examples/pm publish`。`--harmony` 选项在开启子进程时会被保留。
 
-## 自动化ℴℴ帮助
+## 自动化帮助信息 --help
 
-帮助信息是基于信息命令器已经了解您的程序而自动生成的,因此如下`--help`信息是免费的: 
+ 帮助信息是 commander 基于你的程序自动生成的，下面是 `--help` 生成的帮助信息：
 
      $ ./examples/pizza --help
 
@@ -308,7 +332,7 @@ program
 
 ## 自定义帮助
 
-可以任意显示`-h, --help`通过听"帮助"信息. 一旦你完成了,指挥官会自动退出,这样你的程序的其余部分就不会执行而导致不期望的行为,例如,在下面的可执行程序中,当`--help`使用. 
+ 你可以通过监听 `--help` 来控制 `-h, --help` 显示任何信息。一旦调用完成， Commander 将自动退出，你的程序的其余部分不会展示。例如在下面的 “stuff” 将不会在执行 `--help` 时输出。
 
 ```js
 #!/usr/bin/env node
@@ -341,7 +365,7 @@ program.parse(process.argv);
 console.log('stuff');
 ```
 
-何时产生以下帮助输出`node script-name.js -h`或`node script-name.js --help`运行: 
+下列帮助信息是运行 `node script-name.js -h` or `node script-name.js --help` 时输出的:
 
     Usage: custom-help [options]
 
@@ -358,11 +382,11 @@ console.log('stuff');
       $ custom-help --help
       $ custom-help -h
 
-## OutoPelp (CB) 
+## .outputHelp(cb)
 
-输出帮助信息而不退出. 可选回调CB允许在显示帮助文本之前进行后处理. 
-
-如果默认情况下希望显示帮助 (例如,如果没有提供命令) ,则可以使用如下内容: 
+输出帮助信息而不退出. 
+可选的回调可在显示帮助文本后处理。
+如果你想显示默认的帮助（例如，如果没有提供命令），你可以使用类似的东西：
 
 ```js
 var program = require('commander');
@@ -382,9 +406,10 @@ function make_red(txt) {
 }
 ```
 
-## 帮助 (CB) 
+## .help(cb)
 
-输出帮助信息并立即退出. 可选回调CB允许在显示帮助文本之前进行后处理. 
+输出帮助信息并立即退出. 
+可选的回调可在显示帮助文本后处理. 
 
 ## 自定义事件侦听器
 
@@ -447,7 +472,7 @@ program
 program.parse(process.argv);
 ```
 
-更多的演示可以在[实例](https://github.com/tj/commander.js/tree/master/examples)目录. 
+更多的演示,可以看看[实例](https://github.com/tj/commander.js/tree/master/examples)目录. 
 
 ## 许可证
 
